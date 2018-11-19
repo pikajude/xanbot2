@@ -1,0 +1,70 @@
+name: xanbot
+
+default-extensions: [NoMonomorphismRestriction, TemplateHaskell]
+ghc-options: [-Wall]
+
+executable:
+  main: Main.hs
+  source-dirs: [exe]
+  dependencies:
+    - async
+    - base
+    - xb-store
+    - xb-print
+    - xb-twitch
+    - xb-web
+
+internal-libraries:
+  xb-store:
+    dependencies:
+      - base
+      - unordered-containers
+      - text
+      - directory
+      - bytestring
+      - graphql-api
+      - microlens-platform
+      - aeson
+      - yaml
+      - unbounded-delays
+      - xb-print
+    exposed-modules: [Store]
+    source-dirs: [lib/store]
+
+  xb-print:
+    dependencies:
+      - base
+      - ansi-wl-pprint
+      - template-haskell
+      - hashable
+      - interpolate
+    exposed-modules: [Print]
+    source-dirs: [lib/print]
+
+  xb-twitch:
+    exposed-modules: [Twitch]
+    dependencies:
+      - base
+      - mtl
+      - xb-store
+      - unordered-containers
+      - bytestring
+      - text
+      - irc
+      - attoparsec
+      - xb-print
+      - utf8-string
+      - network-simple-tls
+    source-dirs: [twitch]
+
+  xb-web:
+    dependencies:
+      - base
+      - wai
+      - warp
+      - http-types
+      - aeson
+      - xb-store
+      - xb-print
+    source-dirs: [web]
+    exposed-modules: [Web]

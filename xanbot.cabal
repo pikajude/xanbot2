@@ -1,0 +1,113 @@
+cabal-version: 2.0
+
+-- This file has been generated from package.yaml by hpack version 0.31.1.
+--
+-- see: https://github.com/sol/hpack
+--
+-- hash: c80d71780745a10889cf718f5d7a659cec5252ca00e5b027d8adb61d1882c197
+
+name:           xanbot
+version:        0.0.0
+license:        BSD3
+license-file:   LICENSE
+build-type:     Simple
+
+library xb-print
+  exposed-modules:
+      Print
+  other-modules:
+      Paths_xanbot
+  hs-source-dirs:
+      lib/print
+  default-extensions: NoMonomorphismRestriction TemplateHaskell
+  ghc-options: -Wall
+  build-depends:
+      ansi-wl-pprint
+    , base
+    , hashable
+    , interpolate
+    , template-haskell
+  default-language: Haskell2010
+
+library xb-store
+  exposed-modules:
+      Store
+  other-modules:
+      Paths_xanbot
+  hs-source-dirs:
+      lib/store
+  default-extensions: NoMonomorphismRestriction TemplateHaskell
+  ghc-options: -Wall
+  build-depends:
+      aeson
+    , base
+    , bytestring
+    , directory
+    , graphql-api
+    , microlens-platform
+    , text
+    , unbounded-delays
+    , unordered-containers
+    , xb-print
+    , yaml
+  default-language: Haskell2010
+
+library xb-twitch
+  exposed-modules:
+      Twitch
+  other-modules:
+      Command
+      Paths_xanbot
+  hs-source-dirs:
+      twitch
+  default-extensions: NoMonomorphismRestriction TemplateHaskell
+  ghc-options: -Wall
+  build-depends:
+      attoparsec
+    , base
+    , bytestring
+    , irc
+    , mtl
+    , network-simple-tls
+    , text
+    , unordered-containers
+    , utf8-string
+    , xb-print
+    , xb-store
+  default-language: Haskell2010
+
+library xb-web
+  exposed-modules:
+      Web
+  other-modules:
+      Paths_xanbot
+  hs-source-dirs:
+      web
+  default-extensions: NoMonomorphismRestriction TemplateHaskell
+  ghc-options: -Wall
+  build-depends:
+      aeson
+    , base
+    , http-types
+    , wai
+    , warp
+    , xb-print
+    , xb-store
+  default-language: Haskell2010
+
+executable xanbot
+  main-is: Main.hs
+  other-modules:
+      Paths_xanbot
+  hs-source-dirs:
+      exe
+  default-extensions: NoMonomorphismRestriction TemplateHaskell
+  ghc-options: -Wall
+  build-depends:
+      async
+    , base
+    , xb-print
+    , xb-store
+    , xb-twitch
+    , xb-web
+  default-language: Haskell2010
