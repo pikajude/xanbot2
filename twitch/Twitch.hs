@@ -9,6 +9,7 @@ module Twitch where
 
 import Control.Applicative
 import Control.Arrow
+import Control.Concurrent
 import Control.Monad
 import Control.Monad.Fix
 import Control.Monad.Reader
@@ -24,20 +25,31 @@ import Network.IRC.Parser
 import qualified Network.Simple.TCP.TLS as TLS
 import System.Exit
 
-import qualified Command
-import Command (send)
+import qualified IPC
 import Print
 import qualified Store
+import qualified Twitch.Command as Command
+import Twitch.Env (runTwitchEnv)
+import Twitch.Env.TH (send)
 
-bot = do
+bot :: IO IPC.Msg -> IO ()
+bot receive = do
     tok <- B.readFile "token.secret"
     cs <- TLS.getDefaultClientSettings ("irc.chat.twitch.tv", ":6697")
     $info "Connecting to twitch IRC"
-    TLS.connect cs "irc.chat.twitch.tv" "6697" $ \(sock, addr) ->
-        (`runReaderT` sock) $ do
+    TLS.connect cs "irc.chat.twitch.tv" "6697" $ \(sock, addr) -> do
+        sc <- sockChan sock
+        forkIO $
+            forever $
+            runTwitchEnv sc $ do
+                m <- liftIO receive
+                case m of
+                    IPC.NewUser t -> $send $ mconcat ["JOIN #", encodeUtf8 t]
+                    _ -> return ()
+        runTwitchEnv sc $ do
             $info [i|Connected to #{addr}|]
-            send (mconcat ["PASS ", tok])
-            send "NICK xan666bot"
+            $send (mconcat ["PASS ", tok])
+            $send "NICK xan666bot"
             fix
                 (\f res ->
                      case res of
@@ -52,6 +64,15 @@ bot = do
                              f (parse message_ rest))
                 (parse message_ "")
 
+sockChan :: TLS.Context -> IO (Chan U.ByteString)
+sockChan sock = do
+    ch <- newChan
+    forkIO $
+        forever $ do
+            c <- readChan ch
+            TLS.send sock c
+    return ch
+
 message_ =
     Message <$> optionMaybe (prefix <* spaces) <*> command <*> many (spaces *> parameter) <*
     crlf <?> "message"
@@ -62,9 +83,9 @@ respond m@Message {..} = do
     $info ("> " ++ U.toString (encode m))
     case msg_command of
         "376" -> do
-            Store.Store {channels} <- Store.get
-            forM_ (H.keys channels) $ \chan -> send (mconcat ["JOIN ", encodeUtf8 chan])
-        "PING" -> send "PONG :tmi.twitch.tv"
+            Store.Store {users} <- Store.get
+            forM_ (H.keys users) $ \chan -> $send (mconcat ["JOIN #", encodeUtf8 chan])
+        "PING" -> $send "PONG :tmi.twitch.tv"
         "PRIVMSG"
             | [chan, words] <- msg_params
             , Just (NickName n _ _) <- msg_prefix ->

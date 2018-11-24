@@ -1,50 +1,78 @@
-cabal-version: 2.0
-
--- This file has been generated from package.yaml by hpack version 0.31.1.
+-- This file has been generated from package.yaml by hpack version 0.28.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: c80d71780745a10889cf718f5d7a659cec5252ca00e5b027d8adb61d1882c197
+-- hash: 011fbe38677c5f1b56b5f13ed6911ea8d3cfd5d19e28326cac680bf849c4f057
 
 name:           xanbot
 version:        0.0.0
-license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
+cabal-version:  >= 2.0
+extra-source-files:
+    templates/callback.hamlet
+    templates/home.hamlet
+
+flag prod
+  description: Live mode
+  manual: True
+  default: False
+
+library xb-ipc
+  exposed-modules:
+      IPC
+  other-modules:
+      Paths_xanbot
+  hs-source-dirs:
+      lib/ipc
+  default-extensions: NoMonomorphismRestriction TemplateHaskell OverloadedStrings
+  ghc-options: -Wall
+  build-depends:
+      base
+    , text
+  default-language: Haskell2010
 
 library xb-print
   exposed-modules:
       Print
+      Print.HTTPDebug
   other-modules:
       Paths_xanbot
   hs-source-dirs:
       lib/print
-  default-extensions: NoMonomorphismRestriction TemplateHaskell
+  default-extensions: NoMonomorphismRestriction TemplateHaskell OverloadedStrings
   ghc-options: -Wall
   build-depends:
       ansi-wl-pprint
     , base
+    , bytestring
     , hashable
+    , http-client
     , interpolate
     , template-haskell
+    , utf8-string
+    , zlib
   default-language: Haskell2010
 
 library xb-store
   exposed-modules:
       Store
+      Store.Ops
   other-modules:
+      Store.Lens
+      Store.Types
       Paths_xanbot
   hs-source-dirs:
       lib/store
-  default-extensions: NoMonomorphismRestriction TemplateHaskell
+  default-extensions: NoMonomorphismRestriction TemplateHaskell OverloadedStrings
   ghc-options: -Wall
   build-depends:
       aeson
     , base
     , bytestring
     , directory
-    , graphql-api
     , microlens-platform
+    , template-haskell
     , text
     , unbounded-delays
     , unordered-containers
@@ -56,22 +84,26 @@ library xb-twitch
   exposed-modules:
       Twitch
   other-modules:
-      Command
+      Twitch.Command
+      Twitch.Env
+      Twitch.Env.TH
       Paths_xanbot
   hs-source-dirs:
       twitch
-  default-extensions: NoMonomorphismRestriction TemplateHaskell
+  default-extensions: NoMonomorphismRestriction TemplateHaskell OverloadedStrings
   ghc-options: -Wall
   build-depends:
       attoparsec
     , base
     , bytestring
+    , io-streams
     , irc
     , mtl
     , network-simple-tls
     , text
     , unordered-containers
     , utf8-string
+    , xb-ipc
     , xb-print
     , xb-store
   default-language: Haskell2010
@@ -80,19 +112,57 @@ library xb-web
   exposed-modules:
       Web
   other-modules:
+      Web.Keys
+      Web.OAuth
+      Web.Page.Callback
+      Web.Page.Home
+      Web.Page.Prelude
+      Web.Path
+      Web.Session
+      Web.Static
+      Web.Static.Hash
       Paths_xanbot
   hs-source-dirs:
       web
-  default-extensions: NoMonomorphismRestriction TemplateHaskell
+  default-extensions: NoMonomorphismRestriction TemplateHaskell OverloadedStrings CPP
   ghc-options: -Wall
   build-depends:
       aeson
     , base
+    , base16-bytestring
+    , blaze-html
+    , bytestring
+    , cereal
+    , clientsession
+    , cryptohash-md5
+    , data-default
+    , file-embed
+    , http-client
+    , http-client-tls
     , http-types
+    , microlens-platform
+    , mtl
+    , network-uri
+    , shakespeare
+    , text
+    , transformers
+    , unordered-containers
+    , utf8-string
+    , vault
     , wai
+    , wai-app-static
+    , wai-session
+    , wai-session-clientsession
     , warp
+    , web-routes
+    , web-routes-th
+    , xb-ipc
     , xb-print
     , xb-store
+  if flag(prod)
+    cpp-options: -DCALLBACK="https://xanbot.xyz/callback" -DPRODUCTION
+  else
+    cpp-options: -DCALLBACK="http://localhost:8080/callback"
   default-language: Haskell2010
 
 executable xanbot
@@ -101,11 +171,12 @@ executable xanbot
       Paths_xanbot
   hs-source-dirs:
       exe
-  default-extensions: NoMonomorphismRestriction TemplateHaskell
+  default-extensions: NoMonomorphismRestriction TemplateHaskell OverloadedStrings
   ghc-options: -Wall
   build-depends:
       async
     , base
+    , xb-ipc
     , xb-print
     , xb-store
     , xb-twitch

@@ -1,7 +1,15 @@
 name: xanbot
 
-default-extensions: [NoMonomorphismRestriction, TemplateHaskell]
+default-extensions: [NoMonomorphismRestriction, TemplateHaskell, OverloadedStrings]
 ghc-options: [-Wall]
+extra-source-files: [templates/*.hamlet]
+
+flags:
+  prod:
+    description: Live mode
+    manual: True
+    default: False
+
 
 executable:
   main: Main.hs
@@ -9,6 +17,7 @@ executable:
   dependencies:
     - async
     - base
+    - xb-ipc
     - xb-store
     - xb-print
     - xb-twitch
@@ -22,49 +31,96 @@ internal-libraries:
       - text
       - directory
       - bytestring
-      - graphql-api
       - microlens-platform
       - aeson
       - yaml
+      - template-haskell
       - unbounded-delays
       - xb-print
-    exposed-modules: [Store]
+    exposed-modules:
+      - Store
+      - Store.Ops
     source-dirs: [lib/store]
 
   xb-print:
     dependencies:
-      - base
       - ansi-wl-pprint
-      - template-haskell
+      - bytestring
+      - base
+      - zlib
       - hashable
+      - utf8-string
+      - http-client
       - interpolate
-    exposed-modules: [Print]
+      - template-haskell
     source-dirs: [lib/print]
+
+  xb-ipc:
+    dependencies:
+      - base
+      - text
+    exposed-modules: [IPC]
+    source-dirs: [lib/ipc]
 
   xb-twitch:
     exposed-modules: [Twitch]
     dependencies:
-      - base
-      - mtl
-      - xb-store
-      - unordered-containers
-      - bytestring
-      - text
-      - irc
       - attoparsec
-      - xb-print
-      - utf8-string
+      - base
+      - bytestring
+      - io-streams
+      - irc
+      - mtl
       - network-simple-tls
+      - text
+      - unordered-containers
+      - utf8-string
+      - xb-ipc
+      - xb-print
+      - xb-store
     source-dirs: [twitch]
 
   xb-web:
     dependencies:
+      - aeson
+      - vault
+      - mtl
       - base
+      - blaze-html
+      - bytestring
+      - unordered-containers
+      - http-client
+      - http-client-tls
+      - http-types
+      - base16-bytestring
+      - cryptohash-md5
+      - microlens-platform
+      - network-uri
+      - shakespeare
+      - text
+      - wai-session
+      - data-default
+      - cereal
+      - file-embed
+      - wai-app-static
+      - clientsession
+      - wai-session-clientsession
       - wai
       - warp
-      - http-types
-      - aeson
-      - xb-store
+      - web-routes-th
+      - web-routes
+      - transformers
+      - utf8-string
+      - xb-ipc
       - xb-print
+      - xb-store
     source-dirs: [web]
     exposed-modules: [Web]
+    default-extensions: [CPP]
+
+    when:
+      - condition: flag(prod)
+        then:
+          cpp-options: -DCALLBACK="https://xanbot.xyz/callback" -DPRODUCTION
+        else:
+          cpp-options: -DCALLBACK="http://localhost:8080/callback"

@@ -1,4 +1,3 @@
-{-# OPTIONS_GHC -fno-warn-orphans #-}
 {-# LANGUAGE DeriveLift #-}
 {-# LANGUAGE RecordWildCards #-}
 {-# LANGUAGE OverloadedStrings #-}
@@ -15,14 +14,17 @@ import Data.Hashable
 import Data.String.Interpolate as X
 import Language.Haskell.TH
 import Language.Haskell.TH.Syntax
+import System.Environment
+import System.IO
 import System.IO.Unsafe
 import Text.PrettyPrint.ANSI.Leijen
 
 data Sev
-    = Info
+    = Debug
+    | Info
     | Warn
     | Error
-    deriving (Show, Lift)
+    deriving (Show, Lift, Eq)
 
 data Msg = Msg
     { msg :: String
@@ -37,22 +39,45 @@ _print =
         ch <- newChan
         forkIO $
             forever $
-            readChan ch >>= \Msg {..} ->
-                putDoc $ docSev sev <+> docLoc loc <+> string msg <> hardline
+            readChan ch >>= \Msg {..} -> do
+                putDoc $
+                    (if sev == Info
+                         then id
+                         else (docSev sev <+>)) $
+                    docLoc loc <+> string msg <> hardline
+                hFlush stdout
         return ch
   where
+    docSev Debug = dullblue "DBG"
     docSev Info = dullgreen "INF"
     docSev Warn = dullyellow "WRN"
     docSev Error = dullred "ERR"
-    docLoc (lp, lm) = brackets (h $ string str)
+    docLoc (lp, lm) = brackets (h $ string lm)
       where
-        str = lp ++ ":" ++ lm
-        h = [dullblue, dullmagenta, dullcyan] !! abs (hash lm `mod` 3)
+        h =
+            [ dullblue
+            , dullmagenta
+            , dullcyan
+            , bold . dullblue
+            , bold . dullmagenta
+            , bold . dullcyan
+            ] !!
+            abs (hash lp `mod` 6)
 
 helper s = do
     l <- location
     let t = (loc_package l, loc_module l)
-    [|\m -> liftIO (writeChan _print (Msg m s t))|]
+    [|\m ->
+          liftIO $ do
+              sp <- $(shouldPrint) s
+              when sp $ writeChan _print (Msg m s t)|]
+  where
+    shouldPrint =
+        [|\s -> do
+              dbg <- lookupEnv "DEBUG"
+              return $ s /= Debug || dbg == Just "1"|]
+
+dbg = helper Debug
 
 info = helper Info
 
