@@ -4,7 +4,7 @@ cabal-version: 2.0
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b2f705b4d91b8dce01151d3a212d2b7f6c55a6c64fbe27c227a756179d95ddc1
+-- hash: 87a053eda6609012f20baff6f047b088576f55eb691a4f042eed26d8663ba3c5
 
 name:           xanbot
 version:        0.0.0
@@ -130,8 +130,7 @@ library xb-web
   default-extensions: NoMonomorphismRestriction TemplateHaskell OverloadedStrings CPP
   ghc-options: -Wall
   build-tools:
-      flowjs
-    , nodejs
+      nodejs
   build-depends:
       aeson
     , base

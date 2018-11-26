@@ -18,5 +18,9 @@ export default {
       return null;
     }
     return JSON.parse(window.atob(data1.replace('-', '+').replace('_', '/')));
+  },
+
+  loggedIn(): bool {
+    return this.getUser() != null;
   }
-}
+};

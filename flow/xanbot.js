@@ -4,28 +4,31 @@ import * as React from 'react';
 import ReactDOM from 'react-dom';
 import Auth from './Auth';
 import type { Payload } from './Auth';
-import Home from './pages/Home';
-import Callback from './pages/Callback';
+import Home from './components/Home';
+import Callback from './components/Callback';
+import Navbar from './components/Navbar';
 
-import { BrowserRouter as Router, Route, Link } from 'react-router-dom';
+import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 
 import css from '../css/main.css';
-
-type Props = {||};
 
 type State = {|
   user: ?Payload,
 |};
 
-class Xanbot extends React.Component<Props, State> {
-  _getUser() { return Auth.getUser(); }
+class Xanbot extends React.Component<{}, State> {
   _userHeader() {
-    const user = this._getUser();
+    const user = Auth.getUser();
+
     if (user != null) {
       return (
         <div className={css.header}>
           <a className={css['header-user']} href="#">
-            <img src={user.logo} alt={`${user.username}'s logo`} className={css['header-user-icon']} />
+            <img
+              src={user.logo}
+              alt={`${user.username}'s logo`}
+              className={css['header-user-icon']}
+            />
             {user.username}
           </a>
         </div>
@@ -38,13 +41,19 @@ class Xanbot extends React.Component<Props, State> {
     return (
       <Router>
         <div className={css.container}>
-          <div className={css.navbar}>
-            <Link id={css['home-button']} to="/">&#x1f916;</Link>
-          </div>
+          <Route path="/" component={Navbar} />
           <div className={css.main}>
             {this._userHeader()}
-            <Route path="/" exact render={props => <Home {...props} loggedIn={this._getUser() != null} />} />
-            <Route path="/callback" component={Callback} />
+            <div className={css.page_content}>
+              <Switch>
+                <Route path="/" exact component={Home} />
+                <Route path="/callback" component={Callback} />
+                <Route
+                  path="/commands"
+                  render={() => <div>Commands page</div>}
+                />
+              </Switch>
+            </div>
           </div>
         </div>
       </Router>
@@ -54,11 +63,11 @@ class Xanbot extends React.Component<Props, State> {
 
 function nullthrows<T>(x: ?T): T {
   if (x == null) {
-    throw new Error("Oh noey");
+    throw new Error('nullthrows: unexpected null');
   }
   return x;
 }
 
-document.addEventListener("DOMContentLoaded", () => {
-  ReactDOM.render(<Xanbot />, nullthrows(document.body));
+document.addEventListener('DOMContentLoaded', () => {
+  ReactDOM.render(<Xanbot />, nullthrows(document.getElementById('page')));
 });

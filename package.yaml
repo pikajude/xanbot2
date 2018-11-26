@@ -123,9 +123,7 @@ internal-libraries:
     source-dirs: [web]
     exposed-modules: [Web]
     default-extensions: [CPP]
-    system-build-tools:
-      - nodejs
-      - flowjs
+    system-build-tools: [nodejs]
 
     when:
       - condition: flag(prod)

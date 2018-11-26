@@ -1,3 +1,3 @@
 // @flow strict
 
-declare export default { [key: string]: string }
+declare export default { [key: string]: string };

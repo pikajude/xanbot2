@@ -12,15 +12,17 @@ type Props = {|
   ...ContextRouter,
 |};
 
-type Response = {
-  status: 'SUCCESS',
-  code: string,
-} | {
-  status: 'ERROR',
-  message: string,
-};
+type Response =
+  | {
+      status: 'SUCCESS',
+      code: string,
+    }
+  | {
+      status: 'ERROR',
+      message: string,
+    };
 
-type State = {| response: ?string, loaded: bool |};
+type State = {| response: ?string, loaded: boolean |};
 
 class Callback extends React.Component<Props, State> {
   state = { response: null, loaded: false };
@@ -32,7 +34,7 @@ class Callback extends React.Component<Props, State> {
 
     let params = new URLSearchParams(location.search);
     const result = await API.post('/authorize', { code: params.get('code') });
-    this.setState({response: await result.json(), loaded: true});
+    this.setState({ response: await result.json(), loaded: true });
   }
 
   render() {
