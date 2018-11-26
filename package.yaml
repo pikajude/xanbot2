@@ -2,14 +2,13 @@ name: xanbot
 
 default-extensions: [NoMonomorphismRestriction, TemplateHaskell, OverloadedStrings]
 ghc-options: [-Wall]
-extra-source-files: [templates/*.hamlet]
+extra-source-files: [css/*.css]
 
 flags:
   prod:
     description: Live mode
     manual: True
     default: False
-
 
 executable:
   main: Main.hs
@@ -86,6 +85,9 @@ internal-libraries:
       - vault
       - mtl
       - base
+      - servant
+      - servant-auth
+      - servant-server
       - blaze-html
       - bytestring
       - unordered-containers
@@ -100,6 +102,9 @@ internal-libraries:
       - text
       - wai-session
       - data-default
+      - servant-auth
+      - jwt == 0.7.*
+      - cookie
       - cereal
       - file-embed
       - wai-app-static
@@ -110,6 +115,7 @@ internal-libraries:
       - web-routes-th
       - web-routes
       - transformers
+      - microstache
       - utf8-string
       - xb-ipc
       - xb-print
@@ -117,6 +123,9 @@ internal-libraries:
     source-dirs: [web]
     exposed-modules: [Web]
     default-extensions: [CPP]
+    system-build-tools:
+      - nodejs
+      - flowjs
 
     when:
       - condition: flag(prod)

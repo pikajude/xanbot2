@@ -37,7 +37,7 @@ page = do
                     when (not exists) $ Keys.broadcast req (IPC.NewUser $ Store.name who)
                     let name = Store.display_name who
                     Session.set req KUsername (Store.name who)
-                    layout $ pure $(shamletFile "templates/callback.hamlet")
+                    layout $ pure [shamlet|<div>Hi|]
                 Left e ->
                     layout $ do
                         setTitle "Error"

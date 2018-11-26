@@ -1,5 +1,0 @@
-<div>
-  $if exists
-    <p>Welcome back, #{name}!
-  $else
-    <p>Thanks for authorizing xanbot, #{name}! He has joined your Twitch chat.

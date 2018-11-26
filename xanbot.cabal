@@ -1,17 +1,19 @@
--- This file has been generated from package.yaml by hpack version 0.28.2.
+cabal-version: 2.0
+
+-- This file has been generated from package.yaml by hpack version 0.31.1.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 011fbe38677c5f1b56b5f13ed6911ea8d3cfd5d19e28326cac680bf849c4f057
+-- hash: b2f705b4d91b8dce01151d3a212d2b7f6c55a6c64fbe27c227a756179d95ddc1
 
 name:           xanbot
 version:        0.0.0
+license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
-cabal-version:  >= 2.0
 extra-source-files:
-    templates/callback.hamlet
-    templates/home.hamlet
+    css/foundation.min.css
+    css/main.css
 
 flag prod
   description: Live mode
@@ -112,6 +114,7 @@ library xb-web
   exposed-modules:
       Web
   other-modules:
+      Web.API.Callback
       Web.Keys
       Web.OAuth
       Web.Page.Callback
@@ -126,6 +129,9 @@ library xb-web
       web
   default-extensions: NoMonomorphismRestriction TemplateHaskell OverloadedStrings CPP
   ghc-options: -Wall
+  build-tools:
+      flowjs
+    , nodejs
   build-depends:
       aeson
     , base
@@ -134,15 +140,21 @@ library xb-web
     , bytestring
     , cereal
     , clientsession
+    , cookie
     , cryptohash-md5
     , data-default
     , file-embed
     , http-client
     , http-client-tls
     , http-types
+    , jwt ==0.7.*
     , microlens-platform
+    , microstache
     , mtl
     , network-uri
+    , servant
+    , servant-auth
+    , servant-server
     , shakespeare
     , text
     , transformers

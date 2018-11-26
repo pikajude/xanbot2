@@ -50,14 +50,6 @@ layout page = do
                   $maybe st <- title
                     \ | #{st}
               <body>
-                <div .container>
-                  <div .navbar>
-                    <a #home-button href=/>&#x1f916;
-                  <div .main>
-                    $maybe user <- currentUser
-                      <div .header>
-                        <a .header-user href=#>
-                          <img .header-user-icon src=#{Store.logo user} alt="#{Store.display_name user}'s logo">
-                          #{Store.display_name user}
-                    ^{html}
+                <div #page>
+                <script src="/js/all.js">
             |]

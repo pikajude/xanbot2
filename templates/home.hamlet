@@ -1,5 +1,0 @@
-<div .cell>
-  $maybe _ <- user
-    <p>Welcome back!
-  $nothing
-    <a href=#{LT.decodeUtf8 uri}>Authorize xanbot &#x1f916;

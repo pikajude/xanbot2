@@ -19,7 +19,7 @@ page = do
     user <- Session.getUser
     layout $ do
         setTitle "Home"
-        pure $(shamletFile "templates/home.hamlet")
+        pure [shamlet|<div #like_button>|]
   where
     uri =
         toLazyByteString $
