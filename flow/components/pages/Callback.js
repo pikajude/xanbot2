@@ -5,13 +5,12 @@ import { Redirect } from 'react-router-dom';
 import * as React from 'react';
 import Cookies from 'js-cookie';
 
-import API from 'API';
-import type { AuthResponse as Response } from 'API';
+import API from 'codegen/API';
 import Auth from 'Auth';
 
 type Props = {| ...ContextRouter |};
 
-type State = { response: ?Response };
+type State = { response: * };
 
 class Callback extends React.Component<Props, State> {
   state = { response: null };
@@ -22,8 +21,12 @@ class Callback extends React.Component<Props, State> {
     }
 
     let params = new URLSearchParams(location.search);
-    const result = await API.post('/authorize', { code: params.get('code') });
-    this.setState({ response: await result.json() });
+    const code = params.get('code');
+    if (code == null) {
+      return;
+    }
+    const result = await API.postAuthorize({ tag: 'AuthCode', code });
+    this.setState({ response: result });
   }
 
   render() {

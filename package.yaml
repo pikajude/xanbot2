@@ -125,6 +125,10 @@ internal-libraries:
       - directory-tree
       - template-haskell
       - mime-types
+      - servant-js
+      - servant-foreign
+      - neat-interpolation
+      - aeson-flowtyped
       - utf8-string
       - xb-ipc
       - xb-print

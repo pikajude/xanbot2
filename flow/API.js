@@ -1,30 +1,31 @@
 // @flow strict
 // @format
 
-function post(
-  path: string,
-  body: mixed,
-  init: ?RequestOptions
-): Promise<Response> {
+function post(path: string, body: mixed, init: ?RequestOptions) {
   return _handler('POST', path, body, init);
 }
 
-function get(path: string, init: ?RequestOptions): Promise<Response> {
+function get(path: string, init: ?RequestOptions) {
   return _handler('GET', path, null, init);
 }
 
-function _handler(
+async function _handler(
   method: string,
   path: string,
   body: mixed,
   init: ?RequestOptions
-): Promise<Response> {
+): Promise<{}> {
   const opts = Object.assign(init || {}, {
     method,
     body: method != 'GET' ? JSON.stringify(body) : null,
     headers: { 'Content-Type': 'application/json', Cookie: document.cookie },
   });
-  return fetch(`/api${path}`, opts);
+  const resp = await fetch(`/api${path}`, opts);
+  if (resp.ok) {
+    return await resp.json();
+  } else if (resp.status === 401) {
+    return Promise.reject(new Error('Unauthorized'));
+  }
 }
 
 export type AuthResponse =

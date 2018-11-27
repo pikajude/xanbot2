@@ -4,7 +4,7 @@ cabal-version: 2.0
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: b7ced2aeb709c09cf0ef16e1056ab29707725bd7fa7fea6e7265725c6387ad82
+-- hash: f188ec74ff32487f99245368e83bff5c7e2f01f76d7e8c7fe9cd928800578d7a
 
 name:           xanbot
 version:        0.0.0
@@ -144,7 +144,11 @@ library xb-web
       Web
   other-modules:
       Web.API.Callback
+      Web.API.Commands
       Web.Auth
+      Web.Codegen
+      Web.Codegen.Flow
+      Web.Codegen.Instances
       Web.OAuth
       Web.Static
       Web.Static.Hash
@@ -157,6 +161,7 @@ library xb-web
       nodejs
   build-depends:
       aeson
+    , aeson-flowtyped
     , base
     , base16-bytestring
     , blaze-html
@@ -176,9 +181,12 @@ library xb-web
     , microstache
     , mime-types
     , mtl
+    , neat-interpolation
     , network-uri
     , servant
     , servant-auth
+    , servant-foreign
+    , servant-js
     , servant-server
     , shakespeare
     , template-haskell

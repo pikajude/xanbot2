@@ -1,3 +1,7 @@
+{-# Language ScopedTypeVariables #-}
+{-# Language MultiParamTypeClasses #-}
+{-# Language FlexibleInstances #-}
+{-# Language TypeOperators #-}
 {-# Language FlexibleContexts #-}
 {-# Language TypeFamilies #-}
 {-# Language DataKinds #-}
@@ -5,6 +9,9 @@
 module Web.Auth where
 
 import           Data.Text.Encoding
+import           Data.Aeson
+import           Servant.Foreign
+import           Servant.JS
 import           Data.Text                      ( Text )
 import           Network.Wai                    ( Request
                                                 , requestHeaders
@@ -25,7 +32,9 @@ jwtHandler = mkAuthHandler $ \req -> either throw401 pure $ do
         $ decodeAndVerifySignature (secret "secret") (decodeUtf8 session)
     where
         maybeToEither s = maybe (Left s) Right
-        throw401 m = throwError $ err401 { errBody = m }
+        throw401 m = throwError $ err401
+            { errBody = encode $ object ["message" .= (m :: Text)]
+            }
 
 type instance AuthServerData (AuthProtect "jwt") = JWT VerifiedJWT
 

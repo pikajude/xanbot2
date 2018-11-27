@@ -3,7 +3,7 @@
 import type { ContextRouter } from 'react-router-dom';
 import * as React from 'react';
 
-import API from 'API';
+import API from 'codegen/API';
 
 type Props = {
   ...ContextRouter,
@@ -15,8 +15,8 @@ class Commands extends React.Component<Props, State> {
   state = { commands: [] };
 
   async componentDidMount() {
-    const response = await API.get('/commands');
-    this.setState({ commands: await response.json() });
+    const response = await API.getCommands(document.cookie);
+    this.setState({ commands: response });
   }
 
   render() {

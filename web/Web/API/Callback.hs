@@ -1,4 +1,7 @@
+{-# OPTIONS_GHC -ddump-splices #-}
+{-# Language DeriveGeneric #-}
 {-# Language TypeOperators #-}
+{-# Language MultiParamTypeClasses #-}
 {-# Language DataKinds #-}
 {-# LANGUAGE FlexibleContexts #-}
 {-# LANGUAGE TypeFamilies #-}
@@ -8,6 +11,7 @@ module Web.API.Callback where
 
 import           Data.Time.Clock.POSIX
 import           Control.Monad.Except
+import           GHC.Generics
 import           Data.Aeson              hiding ( Success )
 import           Data.Aeson.TH
 import           Data.ByteString.Builder
@@ -22,6 +26,7 @@ import           Servant                        ( err401
                                                 )
 import           Servant.API
 import           Web.Cookie                     ( renderCookiesText )
+import           Web.Codegen
 import           Web.JWT                 hiding ( JSON )
 import           Web.OAuth
 
@@ -31,13 +36,13 @@ import qualified Store.Ops                     as Ops
 
 data AuthCode = AuthCode
     { code :: Text
-    }
+    } deriving Generic
 
-deriveJSON defaultOptions ''AuthCode
+gencode ''AuthCode
 
-data AuthResponse = Success | UserExists | Failure String deriving Show
+data AuthResponse = Success | UserExists | Failure String deriving (Show, Generic)
 
-deriveJSON defaultOptions ''AuthResponse
+gencode ''AuthResponse
 
 endpoint (AuthCode c) = do
     man  <- newTlsManagerWith (debugManager tlsManagerSettings)
