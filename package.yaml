@@ -1,8 +1,13 @@
 name: xanbot
 
-default-extensions: [NoMonomorphismRestriction, TemplateHaskell, OverloadedStrings]
+default-extensions:
+  [NoMonomorphismRestriction, TemplateHaskell, OverloadedStrings]
 ghc-options: [-Wall]
-extra-source-files: [css/*.css]
+extra-source-files:
+  - static/main.js
+  - static/main.css
+  - static/icon/*
+  - static/fonts/*
 
 flags:
   prod:
@@ -89,6 +94,7 @@ internal-libraries:
       - servant-auth
       - servant-server
       - blaze-html
+      - time
       - bytestring
       - unordered-containers
       - http-client
@@ -116,6 +122,9 @@ internal-libraries:
       - web-routes
       - transformers
       - microstache
+      - directory-tree
+      - template-haskell
+      - mime-types
       - utf8-string
       - xb-ipc
       - xb-print

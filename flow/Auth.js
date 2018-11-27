@@ -2,13 +2,13 @@
 
 import Cookies from 'js-cookie';
 
-export type Payload = {
+export type User = {
   username: string,
   logo: string,
 };
 
 export default {
-  getUser(): ?Payload {
+  getUser(): ?User {
     const sess = Cookies.get('_SESSION');
     if (sess == null) {
       return null;
@@ -17,10 +17,16 @@ export default {
     if (data1 == null) {
       return null;
     }
-    return JSON.parse(window.atob(data1.replace('-', '+').replace('_', '/')));
+    const obj = JSON.parse(
+      window.atob(data1.replace('-', '+').replace('_', '/'))
+    );
+    return {
+      logo: obj.logo,
+      username: obj.sub,
+    };
   },
 
-  loggedIn(): bool {
+  loggedIn(): boolean {
     return this.getUser() != null;
-  }
+  },
 };

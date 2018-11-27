@@ -4,10 +4,10 @@ import type { ContextRouter } from 'react-router-dom';
 import * as React from 'react';
 import Uri from 'jsuri';
 
-import API from '../API';
-import Auth from '../Auth';
+import API from 'API';
+import Auth from 'Auth';
 
-import foundation from '../../css/foundation.css';
+import foundation from 'foundation-sites/dist/css/foundation.css';
 
 type Props = {
   ...ContextRouter,
@@ -30,10 +30,15 @@ class Home extends React.Component<Props> {
       return (
         <div>
           <div className={foundation.card}>
-            <div className={foundation['card-divider']}>Card 1</div>
+            <div className={foundation['card-divider']}>Some stat card</div>
+            <div className={foundation['card-section']}>
+              <code>{JSON.stringify(Auth.getUser())}</code>
+            </div>
           </div>
           <div className={foundation.card}>
-            <div className={foundation['card-divider']}>Card 2</div>
+            <div className={foundation['card-divider']}>
+              Some other stat card
+            </div>
           </div>
         </div>
       );

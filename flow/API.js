@@ -24,7 +24,12 @@ function _handler(
     body: method != 'GET' ? JSON.stringify(body) : null,
     headers: { 'Content-Type': 'application/json', Cookie: document.cookie },
   });
-  return fetch(path, opts);
+  return fetch(`/api${path}`, opts);
 }
+
+export type AuthResponse =
+  | { tag: 'Success' }
+  | { tag: 'UserExists' }
+  | { tag: 'Failure', contents: string };
 
 export default { get, post };

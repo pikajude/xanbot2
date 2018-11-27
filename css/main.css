@@ -12,7 +12,7 @@ body {
 
 .container {
   display: flex;
-  width: 1100px;
+  flex-grow: 1;
 }
 
 .navbar {
@@ -23,7 +23,6 @@ body {
 
 #home-button {
   display: block;
-  padding: 6px 0;
   font-size: 36px;
   border-bottom: 1px solid #ccc;
   text-decoration: none;
@@ -40,24 +39,52 @@ body {
 
 .header {
   display: flex;
-  height: 67px;
+  height: 55px;
   color: #222;
   justify-content: flex-end;
   border-bottom: 1px solid #eee;
+  position: relative;
 }
 
 .header-user {
   display: flex;
   align-items: center;
-  padding-right: 20px;
+  padding: 0 16px;
+  width: 200px;
+  user-select: none;
+  z-index: 2;
+}
+
+.header-overlay {
+  position: fixed;
+  z-index: 1;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+}
+
+.header-user:hover, .header-user.header-active, .header-dropdown {
+  background-color: #eee;
 }
 
 .header-user-icon {
-  width: 36px;
+  width: 32px;
   height: auto;
   margin-right: 6px;
 }
 
+.header-dropdown {
+  position: absolute !important;
+  top: 55px;
+  width: 200px;
+  z-index: 2;
+}
+
 .page_content {
   padding: 12px;
+}
+
+.navbar-options {
+  margin-top: 16px;
 }

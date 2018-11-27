@@ -4,7 +4,7 @@ cabal-version: 2.0
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 87a053eda6609012f20baff6f047b088576f55eb691a4f042eed26d8663ba3c5
+-- hash: b7ced2aeb709c09cf0ef16e1056ab29707725bd7fa7fea6e7265725c6387ad82
 
 name:           xanbot
 version:        0.0.0
@@ -12,8 +12,37 @@ license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
-    css/foundation.min.css
-    css/main.css
+    static/main.js
+    static/main.css
+    static/icon/android-chrome-192x192.png
+    static/icon/android-chrome-512x512.png
+    static/icon/apple-touch-icon.png
+    static/icon/browserconfig.xml
+    static/icon/favicon-16x16.png
+    static/icon/favicon-32x32.png
+    static/icon/favicon.ico
+    static/icon/mstile-144x144.png
+    static/icon/mstile-150x150.png
+    static/icon/mstile-310x150.png
+    static/icon/mstile-310x310.png
+    static/icon/mstile-70x70.png
+    static/icon/safari-pinned-tab.svg
+    static/icon/site.webmanifest
+    static/fonts/0b5e3a54.woff
+    static/fonts/0c419713.svg
+    static/fonts/42f9fd6a.svg
+    static/fonts/4478b4d7.svg
+    static/fonts/48f54f63.ttf
+    static/fonts/6493321d.eot
+    static/fonts/659c4d58.woff2
+    static/fonts/8b7a9afd.woff
+    static/fonts/b48c48ea.ttf
+    static/fonts/b69de69a.ttf
+    static/fonts/bcb927a7.woff
+    static/fonts/bdadb6ce.woff2
+    static/fonts/ec0716ae.eot
+    static/fonts/f29ad003.eot
+    static/fonts/fb493903.woff2
 
 flag prod
   description: Live mode
@@ -115,13 +144,8 @@ library xb-web
       Web
   other-modules:
       Web.API.Callback
-      Web.Keys
+      Web.Auth
       Web.OAuth
-      Web.Page.Callback
-      Web.Page.Home
-      Web.Page.Prelude
-      Web.Path
-      Web.Session
       Web.Static
       Web.Static.Hash
       Paths_xanbot
@@ -142,6 +166,7 @@ library xb-web
     , cookie
     , cryptohash-md5
     , data-default
+    , directory-tree
     , file-embed
     , http-client
     , http-client-tls
@@ -149,13 +174,16 @@ library xb-web
     , jwt ==0.7.*
     , microlens-platform
     , microstache
+    , mime-types
     , mtl
     , network-uri
     , servant
     , servant-auth
     , servant-server
     , shakespeare
+    , template-haskell
     , text
+    , time
     , transformers
     , unordered-containers
     , utf8-string

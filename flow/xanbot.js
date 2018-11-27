@@ -2,37 +2,29 @@
 
 import * as React from 'react';
 import ReactDOM from 'react-dom';
-import Auth from './Auth';
-import type { Payload } from './Auth';
-import Home from './components/Home';
-import Callback from './components/Callback';
-import Navbar from './components/Navbar';
-
 import { BrowserRouter as Router, Route, Link, Switch } from 'react-router-dom';
 
-import css from '../css/main.css';
+import Auth from 'Auth';
+import type { User } from 'Auth';
+import Home from 'components/pages/Home';
+import Callback from 'components/pages/Callback';
+import Commands from 'components/pages/Commands';
+import Logout from 'components/pages/Logout';
+import Header from 'components/Header';
+import Navbar from 'components/Navbar';
+
+import css from 'main.css';
 
 type State = {|
-  user: ?Payload,
+  dropdownShown: boolean,
 |};
 
-class Xanbot extends React.Component<{}, State> {
+class Xanbot extends React.Component<{}> {
   _userHeader() {
     const user = Auth.getUser();
 
     if (user != null) {
-      return (
-        <div className={css.header}>
-          <a className={css['header-user']} href="#">
-            <img
-              src={user.logo}
-              alt={`${user.username}'s logo`}
-              className={css['header-user-icon']}
-            />
-            {user.username}
-          </a>
-        </div>
-      );
+      return <Header user={user} />;
     }
     return null;
   }
@@ -41,17 +33,15 @@ class Xanbot extends React.Component<{}, State> {
     return (
       <Router>
         <div className={css.container}>
-          <Route path="/" component={Navbar} />
+          <Route component={Navbar} />
           <div className={css.main}>
-            {this._userHeader()}
+            <Route path="/" render={() => this._userHeader()} />
             <div className={css.page_content}>
               <Switch>
                 <Route path="/" exact component={Home} />
                 <Route path="/callback" component={Callback} />
-                <Route
-                  path="/commands"
-                  render={() => <div>Commands page</div>}
-                />
+                <Route path="/commands" component={Commands} />
+                <Route path="/logout" exact component={Logout} />
               </Switch>
             </div>
           </div>
