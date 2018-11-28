@@ -4,7 +4,7 @@ cabal-version: 2.0
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: f188ec74ff32487f99245368e83bff5c7e2f01f76d7e8c7fe9cd928800578d7a
+-- hash: 6b483bdb87875f2d4e75ce0ddae9352a1fec2e9011b2fb66b6601260d3be2232
 
 name:           xanbot
 version:        0.0.0
@@ -161,7 +161,6 @@ library xb-web
       nodejs
   build-depends:
       aeson
-    , aeson-flowtyped
     , base
     , base16-bytestring
     , blaze-html

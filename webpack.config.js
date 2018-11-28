@@ -1,9 +1,28 @@
 const path = require('path');
+const UglifyJsPlugin = require('uglifyjs-webpack-plugin');
 const MiniCssExtractPlugin = require('mini-css-extract-plugin');
+const OptimizeCSSAssetsPlugin = require('optimize-css-assets-webpack-plugin');
+const CopyWebpackPlugin = require('copy-webpack-plugin');
 
 module.exports = (env, argv) => {
   const prod = argv.mode === 'production';
+
+  const dev = (p1, p2) => (argv.mode === 'production' ? p2 : p1);
+
   return {
+    optimization: {
+      minimizer: dev(
+        [],
+        [
+          new UglifyJsPlugin({
+            cache: true,
+            parallel: true,
+            sourceMap: true,
+          }),
+          new OptimizeCSSAssetsPlugin({}),
+        ]
+      ),
+    },
     mode: 'development',
     entry: './flow/xanbot.js',
     output: {
@@ -47,9 +66,10 @@ module.exports = (env, argv) => {
               options: {
                 modules: true,
                 importLoaders: 1,
-                localIdentName: `${
-                  prod ? '' : '[name]_[local]__'
-                }[hash:base64:5]`,
+                localIdentName: dev(
+                  '[name]_[local]__[hash:base64:8]',
+                  '[hash:base64:8]'
+                ),
               },
             },
           ],
@@ -58,11 +78,17 @@ module.exports = (env, argv) => {
           test: /\.(woff|woff2|eot|ttf|svg)$/,
           loader: 'file-loader',
           options: {
-            name: 'fonts/[hash:8].[ext]'
-          }
+            name: dev(
+              'fonts/[name]_[hash:base64:8].[ext]',
+              'fonts/[hash:base64:8].[ext]'
+            ),
+          },
         },
       ],
     },
-    plugins: [new MiniCssExtractPlugin({ filename: '[name].css' })],
+    plugins: [
+      new MiniCssExtractPlugin({ filename: '[name].css' }),
+      new CopyWebpackPlugin([{ from: 'icon', to: 'icon' }]),
+    ],
   };
 };

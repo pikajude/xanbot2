@@ -2,9 +2,9 @@
 
 module Twitch.Env where
 
-import Control.Concurrent.Chan
-import Control.Monad.Reader
-import qualified Data.ByteString.UTF8 as U
+import           Control.Concurrent.Chan
+import           Control.Monad.Reader
+import qualified Data.ByteString.UTF8          as U
 
 type Env = ReaderT (Chan U.ByteString) IO
 

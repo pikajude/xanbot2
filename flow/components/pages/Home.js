@@ -4,7 +4,6 @@ import type { ContextRouter } from 'react-router-dom';
 import * as React from 'react';
 import Uri from 'jsuri';
 
-import API from 'API';
 import Auth from 'Auth';
 
 import foundation from 'foundation-sites/dist/css/foundation.css';

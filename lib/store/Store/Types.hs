@@ -1,10 +1,10 @@
 module Store.Types where
 
-import Data.Aeson
-import Data.Aeson.TH
-import Data.HashMap.Strict (HashMap)
-import Data.Text (Text)
-import Store.Lens
+import           Data.Aeson
+import           Data.Aeson.TH
+import           Data.HashMap.Strict            ( HashMap )
+import           Data.Text                      ( Text )
+import           Store.Lens
 
 data Store = Store
     { users :: HashMap Text UserStore
