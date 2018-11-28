@@ -79,7 +79,7 @@ module.exports = (env, argv) => {
           loader: 'file-loader',
           options: {
             name: dev(
-              'fonts/[name]_[hash:base64:8].[ext]',
+              'fonts/[name].[ext]',
               'fonts/[hash:base64:8].[ext]'
             ),
           },

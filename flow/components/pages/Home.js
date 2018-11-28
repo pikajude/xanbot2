@@ -14,7 +14,7 @@ type Props = {
 
 const _AUTH = new Uri('https://id.twitch.tv/oauth2/authorize')
   .addQueryParam('client_id', 'z92ktp9wj39vy8wc0t8q2k52q41pb3')
-  .addQueryParam('redirect_uri', 'http://localhost:8080/callback')
+  .addQueryParam('redirect_uri', 'https://xanbot.xyz/callback')
   .addQueryParam('response_type', 'code')
   .addQueryParam('scope', 'user_read channel_editor')
   .toString();

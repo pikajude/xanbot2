@@ -4,7 +4,7 @@ cabal-version: 2.0
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 6b483bdb87875f2d4e75ce0ddae9352a1fec2e9011b2fb66b6601260d3be2232
+-- hash: 8db717653307e9b3a63c0fd4db445a6f0ac9dc22685341b22ca0b54d9399bc95
 
 name:           xanbot
 version:        0.0.0
@@ -12,37 +12,23 @@ license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
 extra-source-files:
-    static/main.js
-    static/main.css
-    static/icon/android-chrome-192x192.png
-    static/icon/android-chrome-512x512.png
-    static/icon/apple-touch-icon.png
-    static/icon/browserconfig.xml
-    static/icon/favicon-16x16.png
-    static/icon/favicon-32x32.png
-    static/icon/favicon.ico
-    static/icon/mstile-144x144.png
-    static/icon/mstile-150x150.png
-    static/icon/mstile-310x150.png
-    static/icon/mstile-310x310.png
-    static/icon/mstile-70x70.png
-    static/icon/safari-pinned-tab.svg
-    static/icon/site.webmanifest
-    static/fonts/0b5e3a54.woff
-    static/fonts/0c419713.svg
-    static/fonts/42f9fd6a.svg
-    static/fonts/4478b4d7.svg
-    static/fonts/48f54f63.ttf
-    static/fonts/6493321d.eot
-    static/fonts/659c4d58.woff2
-    static/fonts/8b7a9afd.woff
-    static/fonts/b48c48ea.ttf
-    static/fonts/b69de69a.ttf
-    static/fonts/bcb927a7.woff
-    static/fonts/bdadb6ce.woff2
-    static/fonts/ec0716ae.eot
-    static/fonts/f29ad003.eot
-    static/fonts/fb493903.woff2
+    html/index.html
+    icon/android-chrome-192x192.png
+    icon/android-chrome-512x512.png
+    icon/apple-touch-icon.png
+    icon/browserconfig.xml
+    icon/favicon-16x16.png
+    icon/favicon-32x32.png
+    icon/favicon.ico
+    icon/mstile-144x144.png
+    icon/mstile-150x150.png
+    icon/mstile-310x150.png
+    icon/mstile-310x310.png
+    icon/mstile-70x70.png
+    icon/safari-pinned-tab.svg
+    icon/site.webmanifest
+    css/loader.css
+    css/main.css
 
 flag prod
   description: Live mode
@@ -161,6 +147,7 @@ library xb-web
       nodejs
   build-depends:
       aeson
+    , aeson-flowtyped
     , base
     , base16-bytestring
     , blaze-html

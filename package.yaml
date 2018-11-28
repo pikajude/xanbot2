@@ -4,10 +4,9 @@ default-extensions:
   [NoMonomorphismRestriction, TemplateHaskell, OverloadedStrings]
 ghc-options: [-Wall]
 extra-source-files:
-  - static/main.js
-  - static/main.css
-  - static/icon/*
-  - static/fonts/*
+  - html/*.html
+  - icon/*
+  - css/*
 
 flags:
   prod:
@@ -128,7 +127,7 @@ internal-libraries:
       - servant-js
       - servant-foreign
       - neat-interpolation
-        # - aeson-flowtyped
+      - aeson-flowtyped
       - utf8-string
       - xb-ipc
       - xb-print
