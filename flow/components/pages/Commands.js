@@ -11,7 +11,7 @@ type Props = {
 
 type State = { commands: Array<string> };
 
-class Commands extends React.Component<Props, State> {
+export default class Commands extends React.Component<Props, State> {
   state = { commands: [] };
 
   async componentDidMount() {
@@ -23,5 +23,3 @@ class Commands extends React.Component<Props, State> {
     return <div>{JSON.stringify(this.state.commands)}</div>;
   }
 }
-
-export default Commands;

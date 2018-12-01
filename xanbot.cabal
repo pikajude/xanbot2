@@ -1,17 +1,17 @@
-cabal-version: 2.0
-
--- This file has been generated from package.yaml by hpack version 0.31.1.
+-- This file has been generated from package.yaml by hpack version 0.28.2.
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 8db717653307e9b3a63c0fd4db445a6f0ac9dc22685341b22ca0b54d9399bc95
+-- hash: 2e30148a7965ae378cdf3eb2a99194c8a7e5c59bb3ab34c6211282e0600d98ab
 
 name:           xanbot
 version:        0.0.0
-license:        BSD3
 license-file:   LICENSE
 build-type:     Simple
+cabal-version:  >= 2.0
 extra-source-files:
+    css/loader.css
+    css/main.css
     html/index.html
     icon/android-chrome-192x192.png
     icon/android-chrome-512x512.png
@@ -27,27 +27,11 @@ extra-source-files:
     icon/mstile-70x70.png
     icon/safari-pinned-tab.svg
     icon/site.webmanifest
-    css/loader.css
-    css/main.css
 
 flag prod
   description: Live mode
   manual: True
   default: False
-
-library xb-ipc
-  exposed-modules:
-      IPC
-  other-modules:
-      Paths_xanbot
-  hs-source-dirs:
-      lib/ipc
-  default-extensions: NoMonomorphismRestriction TemplateHaskell OverloadedStrings
-  ghc-options: -Wall
-  build-depends:
-      base
-    , text
-  default-language: Haskell2010
 
 library xb-print
   exposed-modules:
@@ -73,11 +57,12 @@ library xb-print
 
 library xb-store
   exposed-modules:
+      IPC
       Store
-      Store.Ops
-  other-modules:
       Store.Lens
+      Store.Ops
       Store.Types
+  other-modules:
       Paths_xanbot
   hs-source-dirs:
       lib/store
@@ -88,7 +73,9 @@ library xb-store
     , base
     , bytestring
     , directory
-    , microlens-platform
+    , lens
+    , mtl
+    , stm
     , template-haskell
     , text
     , unbounded-delays
@@ -120,7 +107,6 @@ library xb-twitch
     , text
     , unordered-containers
     , utf8-string
-    , xb-ipc
     , xb-print
     , xb-store
   default-language: Haskell2010
@@ -143,8 +129,6 @@ library xb-web
       web
   default-extensions: NoMonomorphismRestriction TemplateHaskell OverloadedStrings CPP
   ghc-options: -Wall
-  build-tools:
-      nodejs
   build-depends:
       aeson
     , aeson-flowtyped
@@ -163,7 +147,7 @@ library xb-web
     , http-client-tls
     , http-types
     , jwt ==0.7.*
-    , microlens-platform
+    , lens
     , microstache
     , mime-types
     , mtl
@@ -189,7 +173,6 @@ library xb-web
     , warp
     , web-routes
     , web-routes-th
-    , xb-ipc
     , xb-print
     , xb-store
   if flag(prod)
@@ -209,7 +192,6 @@ executable xanbot
   build-depends:
       async
     , base
-    , xb-ipc
     , xb-print
     , xb-store
     , xb-twitch

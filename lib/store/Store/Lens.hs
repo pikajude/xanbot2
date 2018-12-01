@@ -3,7 +3,7 @@ module Store.Lens where
 import           Data.Aeson.TH
 import           Data.Char
 import           Language.Haskell.TH
-import           Lens.Micro.Platform
+import           Control.Lens
 
 makeLenses = makeLensesWith
     (lensRules & lensField .~ (\_ _ n -> [TopName (mkName (nameBase n ++ "L"))])

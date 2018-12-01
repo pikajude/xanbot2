@@ -14,17 +14,17 @@ flags:
     manual: True
     default: False
 
-executable:
-  main: Main.hs
-  source-dirs: [exe]
-  dependencies:
-    - async
-    - base
-    - xb-ipc
-    - xb-store
-    - xb-print
-    - xb-twitch
-    - xb-web
+executables:
+  xanbot:
+    main: Main.hs
+    source-dirs: [exe]
+    dependencies:
+      - async
+      - base
+      - xb-store
+      - xb-print
+      - xb-twitch
+      - xb-web
 
 internal-libraries:
   xb-store:
@@ -34,15 +34,14 @@ internal-libraries:
       - text
       - directory
       - bytestring
-      - microlens-platform
+      - lens
       - aeson
+      - stm
       - yaml
       - template-haskell
       - unbounded-delays
+      - mtl
       - xb-print
-    exposed-modules:
-      - Store
-      - Store.Ops
     source-dirs: [lib/store]
 
   xb-print:
@@ -58,13 +57,6 @@ internal-libraries:
       - template-haskell
     source-dirs: [lib/print]
 
-  xb-ipc:
-    dependencies:
-      - base
-      - text
-    exposed-modules: [IPC]
-    source-dirs: [lib/ipc]
-
   xb-twitch:
     exposed-modules: [Twitch]
     dependencies:
@@ -78,7 +70,6 @@ internal-libraries:
       - text
       - unordered-containers
       - utf8-string
-      - xb-ipc
       - xb-print
       - xb-store
     source-dirs: [twitch]
@@ -101,7 +92,7 @@ internal-libraries:
       - http-types
       - base16-bytestring
       - cryptohash-md5
-      - microlens-platform
+      - lens
       - network-uri
       - shakespeare
       - text
@@ -129,7 +120,6 @@ internal-libraries:
       - neat-interpolation
       - aeson-flowtyped
       - utf8-string
-      - xb-ipc
       - xb-print
       - xb-store
     source-dirs: [web]

@@ -6,7 +6,7 @@
 module Store
     ( module Store
     , module Store.Types
-    , module Lens.Micro.Platform
+    , module Control.Lens
     )
 where
 
@@ -23,7 +23,7 @@ import qualified Data.HashMap.Strict           as H
 import           Data.Maybe
 import           Data.Text                      ( Text )
 import           Data.Yaml
-import           Lens.Micro.Platform
+import           Control.Lens
 import           Print
 import           Store.Types
 import           System.Directory
