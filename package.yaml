@@ -1,135 +1,15 @@
 name: xanbot
 
-default-extensions:
-  [NoMonomorphismRestriction, TemplateHaskell, OverloadedStrings]
-ghc-options: [-Wall]
-extra-source-files:
-  - html/*.html
-  - icon/*
-  - css/*
+build-tools: nodejs
 
-flags:
-  prod:
-    description: Live mode
-    manual: True
-    default: False
-
-executables:
-  xanbot:
-    main: Main.hs
-    source-dirs: [exe]
-    dependencies:
-      - async
-      - base
-      - xb-store
-      - xb-print
-      - xb-twitch
-      - xb-web
-
-internal-libraries:
-  xb-store:
-    dependencies:
-      - base
-      - unordered-containers
-      - text
-      - directory
-      - bytestring
-      - lens
-      - aeson
-      - stm
-      - yaml
-      - template-haskell
-      - unbounded-delays
-      - mtl
-      - xb-print
-    source-dirs: [lib/store]
-
-  xb-print:
-    dependencies:
-      - ansi-wl-pprint
-      - bytestring
-      - base
-      - zlib
-      - hashable
-      - utf8-string
-      - http-client
-      - interpolate
-      - template-haskell
-    source-dirs: [lib/print]
-
-  xb-twitch:
-    exposed-modules: [Twitch]
-    dependencies:
-      - attoparsec
-      - base
-      - bytestring
-      - io-streams
-      - irc
-      - mtl
-      - network-simple-tls
-      - text
-      - unordered-containers
-      - utf8-string
-      - xb-print
-      - xb-store
-    source-dirs: [twitch]
-
-  xb-web:
-    dependencies:
-      - aeson
-      - vault
-      - mtl
-      - base
-      - servant
-      - servant-auth
-      - servant-server
-      - blaze-html
-      - time
-      - bytestring
-      - unordered-containers
-      - http-client
-      - http-client-tls
-      - http-types
-      - base16-bytestring
-      - cryptohash-md5
-      - lens
-      - network-uri
-      - shakespeare
-      - text
-      - wai-session
-      - data-default
-      - servant-auth
-      - jwt == 0.7.*
-      - cookie
-      - cereal
-      - file-embed
-      - wai-app-static
-      - clientsession
-      - wai-session-clientsession
-      - wai
-      - warp
-      - web-routes-th
-      - web-routes
-      - transformers
-      - microstache
-      - directory-tree
-      - template-haskell
-      - mime-types
-      - servant-js
-      - servant-foreign
-      - neat-interpolation
-      - aeson-flowtyped
-      - utf8-string
-      - xb-print
-      - xb-store
-    source-dirs: [web]
-    exposed-modules: [Web]
-    default-extensions: [CPP]
-    system-build-tools: [nodejs]
-
-    when:
-      - condition: flag(prod)
-        then:
-          cpp-options: -DCALLBACK="https://xanbot.xyz/callback" -DPRODUCTION
-        else:
-          cpp-options: -DCALLBACK="http://localhost:8080/callback"
+executable:
+  main: Main.hs
+  dependencies:
+    - base
+    - reflex-basic-host
+    - http-types
+    - stm
+    - websockets
+    - mtl
+    - reflex
+  source-dirs: [src]

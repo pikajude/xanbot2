@@ -2,198 +2,27 @@
 --
 -- see: https://github.com/sol/hpack
 --
--- hash: 2e30148a7965ae378cdf3eb2a99194c8a7e5c59bb3ab34c6211282e0600d98ab
+-- hash: 5890b99dc75a5bd1313beaf36061db3f5e92a07e8e64156796d5f90bb678304c
 
 name:           xanbot
 version:        0.0.0
-license-file:   LICENSE
 build-type:     Simple
-cabal-version:  >= 2.0
-extra-source-files:
-    css/loader.css
-    css/main.css
-    html/index.html
-    icon/android-chrome-192x192.png
-    icon/android-chrome-512x512.png
-    icon/apple-touch-icon.png
-    icon/browserconfig.xml
-    icon/favicon-16x16.png
-    icon/favicon-32x32.png
-    icon/favicon.ico
-    icon/mstile-144x144.png
-    icon/mstile-150x150.png
-    icon/mstile-310x150.png
-    icon/mstile-310x310.png
-    icon/mstile-70x70.png
-    icon/safari-pinned-tab.svg
-    icon/site.webmanifest
-
-flag prod
-  description: Live mode
-  manual: True
-  default: False
-
-library xb-print
-  exposed-modules:
-      Print
-      Print.HTTPDebug
-  other-modules:
-      Paths_xanbot
-  hs-source-dirs:
-      lib/print
-  default-extensions: NoMonomorphismRestriction TemplateHaskell OverloadedStrings
-  ghc-options: -Wall
-  build-depends:
-      ansi-wl-pprint
-    , base
-    , bytestring
-    , hashable
-    , http-client
-    , interpolate
-    , template-haskell
-    , utf8-string
-    , zlib
-  default-language: Haskell2010
-
-library xb-store
-  exposed-modules:
-      IPC
-      Store
-      Store.Lens
-      Store.Ops
-      Store.Types
-  other-modules:
-      Paths_xanbot
-  hs-source-dirs:
-      lib/store
-  default-extensions: NoMonomorphismRestriction TemplateHaskell OverloadedStrings
-  ghc-options: -Wall
-  build-depends:
-      aeson
-    , base
-    , bytestring
-    , directory
-    , lens
-    , mtl
-    , stm
-    , template-haskell
-    , text
-    , unbounded-delays
-    , unordered-containers
-    , xb-print
-    , yaml
-  default-language: Haskell2010
-
-library xb-twitch
-  exposed-modules:
-      Twitch
-  other-modules:
-      Twitch.Command
-      Twitch.Env
-      Twitch.Env.TH
-      Paths_xanbot
-  hs-source-dirs:
-      twitch
-  default-extensions: NoMonomorphismRestriction TemplateHaskell OverloadedStrings
-  ghc-options: -Wall
-  build-depends:
-      attoparsec
-    , base
-    , bytestring
-    , io-streams
-    , irc
-    , mtl
-    , network-simple-tls
-    , text
-    , unordered-containers
-    , utf8-string
-    , xb-print
-    , xb-store
-  default-language: Haskell2010
-
-library xb-web
-  exposed-modules:
-      Web
-  other-modules:
-      Web.API.Callback
-      Web.API.Commands
-      Web.Auth
-      Web.Codegen
-      Web.Codegen.Flow
-      Web.Codegen.Instances
-      Web.OAuth
-      Web.Static
-      Web.Static.Hash
-      Paths_xanbot
-  hs-source-dirs:
-      web
-  default-extensions: NoMonomorphismRestriction TemplateHaskell OverloadedStrings CPP
-  ghc-options: -Wall
-  build-depends:
-      aeson
-    , aeson-flowtyped
-    , base
-    , base16-bytestring
-    , blaze-html
-    , bytestring
-    , cereal
-    , clientsession
-    , cookie
-    , cryptohash-md5
-    , data-default
-    , directory-tree
-    , file-embed
-    , http-client
-    , http-client-tls
-    , http-types
-    , jwt ==0.7.*
-    , lens
-    , microstache
-    , mime-types
-    , mtl
-    , neat-interpolation
-    , network-uri
-    , servant
-    , servant-auth
-    , servant-foreign
-    , servant-js
-    , servant-server
-    , shakespeare
-    , template-haskell
-    , text
-    , time
-    , transformers
-    , unordered-containers
-    , utf8-string
-    , vault
-    , wai
-    , wai-app-static
-    , wai-session
-    , wai-session-clientsession
-    , warp
-    , web-routes
-    , web-routes-th
-    , xb-print
-    , xb-store
-  if flag(prod)
-    cpp-options: -DCALLBACK="https://xanbot.xyz/callback" -DPRODUCTION
-  else
-    cpp-options: -DCALLBACK="http://localhost:8080/callback"
-  default-language: Haskell2010
+cabal-version:  >= 1.10
 
 executable xanbot
   main-is: Main.hs
   other-modules:
       Paths_xanbot
   hs-source-dirs:
-      exe
-  default-extensions: NoMonomorphismRestriction TemplateHaskell OverloadedStrings
-  ghc-options: -Wall
+      src
   build-depends:
-      async
-    , base
-    , xb-print
-    , xb-store
-    , xb-twitch
-    , xb-web
+      base
+    , http-types
+    , mtl
+    , reflex
+    , reflex-basic-host
+    , stm
+    , websockets
+  build-tools:
+      nodejs
   default-language: Haskell2010
