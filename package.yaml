@@ -1,15 +1,28 @@
 name: xanbot
 
-build-tools: nodejs
+ghc-options: -Wall
 
 executable:
   main: Main.hs
   dependencies:
+    - lens
     - base
-    - reflex-basic-host
+    - text
+    - containers
     - http-types
     - stm
-    - websockets
     - mtl
+    - websockets
+    - network
+    - file-embed
+    - time
+    - async
     - reflex
+    - aeson
+    - data-msgpack
+    - reflex-basic-host
+    - ansi-wl-pprint
+    - template-haskell
+    - jwt
   source-dirs: [src]
+  ghc-options: -threaded -rtsopts -with-rtsopts=-N

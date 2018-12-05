@@ -2,7 +2,7 @@
 
 with nixpkgs;
 
-(haskell.packages.ghc844.override { overrides = self: super: {
+(haskell.packages.ghc822.override { overrides = self: super: {
   monoidal-containers = self.monoidal-containers_0_4_0_0;
 
   reflex-basic-host = self.callCabal2nix "reflex-basic-host"

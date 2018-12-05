@@ -1,0 +1,12 @@
+{
+  "name": "xanbot",
+  "version": "1.0.0",
+  "description": "xanbot webpack config",
+  "scripts": {},
+  "author": "Jude Taylor <me@jude.xyz>",
+  "license": "ISC",
+  "devDependencies": {
+    "webpack": "^4.27.0",
+    "webpack-cli": "^3.1.2"
+  }
+}

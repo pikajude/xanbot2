@@ -1,5 +1,4 @@
 node_modules
-store.yaml
-client_session_key.aes
+session_key.bin
 static
 package-lock.json

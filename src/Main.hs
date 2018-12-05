@@ -1,3 +1,5 @@
+{-# LANGUAGE GADTs #-}
+{-# Language ScopedTypeVariables #-}
 {-# Language FlexibleContexts #-}
 {-# Language NoMonomorphismRestriction #-}
 {-# Language OverloadedStrings #-}
@@ -5,35 +7,21 @@
 
 module Main where
 
-import           Control.Concurrent
-import           Control.Monad
-import           Control.Monad.Trans
-import           Reflex
-import           Network.WebSockets
-import           System.IO
-import           Control.Monad.Fix
-import           Data.Functor
+import           Data.Text                      ( pack )
+import           Server
 import           Reflex.Host.Basic
+import           Data.Time.LocalTime
+import           Reflex
+import           Control.Monad.IO.Class
+import           Server.Types
 
 main :: IO ()
 main = basicHostForever $ mdo
-    (pendingConn, bc) <- newTriggerEvent
-    liftIO $ forkIO $ runServer "localhost" 8080 bc
+  greeting <- performEvent $ ffor recv $ \(u, _dm) -> do
+    ti <- liftIO getZonedTime
+    pure
+      (u, pack ("Hi, user #" ++ show (intId u) ++ "! The time is " ++ show ti))
 
-    pb   <- getPostBuild
-    echo <- line
+  Server { receivedMessage = recv } <- webSocketServer greeting
 
-    tck  <- tickLossyFromPostBuildTime 1
-
-    performEvent_ $ liftIO . putStrLn <$> leftmost
-        [echo, show <$> tck, show . pendingRequest <$> pendingConn]
-
-    return ()
-
-line = do
-    pb <- getPostBuild
-    performEventAsync $ pb $> \fn -> void $ liftIO $ forkIO $ fix $ \f -> do
-        c <- hIsOpen stdin
-        when c $ do
-            fn =<< getLine
-            f
+  pure ()

@@ -1,0 +1,12 @@
+resolver: lts-12.21
+
+packages:
+  - .
+
+extra-deps:
+  - github: reflex-frp/reflex
+    commit: c0f3ee401624a6c5014498ef5db900f0389d9e94
+  - github: dalaing/reflex-basic-host
+    commit: cf7efd48855e30c0940897e12ac694b3617d4e56
+  - monoidal-containers-0.4.0.0@sha256:7e52944ef27fce8e59b5bac5d59b35e88b36a5f65176aa7b784f848e9e9b9a22
+  - ref-tf-0.4.0.1@sha256:fe808d143a0bf19437b5ba65c74bcb5cda709944b52e13c16528864a5d897f03
