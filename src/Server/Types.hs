@@ -14,7 +14,7 @@ import           Data.Map                       ( Map )
 import           Network.WebSockets
 
 data Client = Client
-    { jwt :: JWT VerifiedJWT
+    { jwt :: Maybe (JWT VerifiedJWT)
     , connection :: Connection
     }
 

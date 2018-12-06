@@ -1,12 +1,38 @@
-resolver: lts-12.21
+resolver: lts-11.22
 
 packages:
   - .
 
-extra-deps:
-  - github: reflex-frp/reflex
-    commit: c0f3ee401624a6c5014498ef5db900f0389d9e94
-  - github: dalaing/reflex-basic-host
-    commit: cf7efd48855e30c0940897e12ac694b3617d4e56
-  - monoidal-containers-0.4.0.0@sha256:7e52944ef27fce8e59b5bac5d59b35e88b36a5f65176aa7b784f848e9e9b9a22
-  - ref-tf-0.4.0.1@sha256:fe808d143a0bf19437b5ba65c74bcb5cda709944b52e13c16528864a5d897f03
+# allow-newer: true
+
+ghc-options:
+  "$everything": -optl-F/System/Library/Frameworks
+  # jsaddle-wkwebview: -optc-F/System/Library/Frameworks -optc-I/usr/include
+
+# extra-deps:
+#   - github: reflex-frp/reflex
+#     commit: 2c089a255184ac1ae8250be44dcb44fddad7ddd5
+#   - github: reflex-frp/reflex-dom
+#     commit: 8bde2d72193369c92a995820ca1f56690d3c8ec3
+#     subdirs:
+#       - reflex-dom
+#       - reflex-dom-core
+#   - github: ghcjs/ghcjs-dom
+#     commit: d17a8078b05e7b06dc2ad5553016181c20bd2f83
+#     subdirs:
+#       - ghcjs-dom
+#       - ghcjs-dom-jsaddle
+#   - github: ghcjs/jsaddle
+#     commit: 471b4426e73613086229895b8a8d26e20d89a78a
+#     subdirs:
+#       - jsaddle
+#       - jsaddle-wkwebview
+#   - github: ghcjs/jsaddle-dom
+#     commit: 6ba167147476adebe7783e1521591aa3fd13da28
+#   - github: dalaing/reflex-basic-host
+#     commit: cf7efd48855e30c0940897e12ac694b3617d4e56
+#   - monoidal-containers-0.4.0.0@sha256:7e52944ef27fce8e59b5bac5d59b35e88b36a5f65176aa7b784f848e9e9b9a22
+#   - ref-tf-0.4.0.1@sha256:fe808d143a0bf19437b5ba65c74bcb5cda709944b52e13c16528864a5d897f03
+#   - aeson-flowtyped-0.9.1@sha256:31f8b4abaad0e2f56686f369355ba5ed22b33c05b75f2c2a2f3458c11b2ff3ef
+#   - wl-pprint-1.2.1@sha256:aea676cff4a062d7d912149d270e33f5bb0c01b68a9db46ff13b438141ff4b7c
+#   - zenc-0.1.1@sha256:e4be3e5e9fe1a1ade05910909c6e5b5a8eff72e697868b03955c9781b0443947

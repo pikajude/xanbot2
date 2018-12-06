@@ -24,4 +24,6 @@ main = basicHostForever $ mdo
 
   Server { receivedMessage = recv } <- webSocketServer greeting
 
+  liftIO $ putStrLn "Server is running"
+
   pure ()

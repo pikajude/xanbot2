@@ -2,6 +2,7 @@
 {-# LANGUAGE KindSignatures #-}
 {-# LANGUAGE GADTs #-}
 {-# Language FlexibleContexts #-}
+{-# LANGUAGE OverloadedStrings #-}
 {-# Language NoMonomorphismRestriction #-}
 {-# Language RecursiveDo #-}
 {-# LANGUAGE TypeApplications #-}
@@ -12,9 +13,8 @@ module Server where
 
 import           Reflex
 import           Network.WebSockets      hiding ( runServer )
-import           Data.Text                      ( Text
-                                                , pack
-                                                )
+import           Data.Text                      ( Text )
+import           Data.Text.Encoding
 import qualified Data.Map                      as M
 import           Server.Message
 import           Control.Monad.Fix
@@ -24,13 +24,14 @@ import           Control.Monad.IO.Class
 import           Control.Concurrent.Async
 import           Control.Exception
 import           Control.Monad
+import           Web.Cookie
 import           Control.Concurrent
-import Control.Lens.Fold
-import qualified Data.MessagePack              as MP
+import           Control.Lens
 import           Data.Functor
 import           Logger
 import           Server.Types
-import           Web.JWT
+import           Web.JWT                 hiding ( decode )
+import           Data.Aeson
 
 -- | A websocket server.
 data Server t = Server {
@@ -57,7 +58,7 @@ webSocketServer sender = mdo
   nextConn <- performEventAsync $ pb $> \fn ->
     void $ liftIO $ forkIO $ forever $ do
       (s, _) <- accept sock
-      conn <- acceptRequest =<< makePendingConnection s defaultConnectionOptions
+      conn   <- makePendingConnection s defaultConnectionOptions
       authenticateOrClose fn conn
 
   (closeConn, doClose) <- newTriggerEvent
@@ -103,15 +104,21 @@ webSocketServer sender = mdo
 
     noreturn = liftIO $ forever (threadDelay 1000000)
 
-authenticateOrClose :: ((UniqueId, Client) -> IO ()) -> Connection -> IO ()
-authenticateOrClose trigger conn = do
-  sendBinaryData conn (MP.pack HANDSHAKE)
-  bs <- receiveData conn
-  case MP.unpack bs >>= preview _Auth >>= decodeAndVerifySignature _SECRET of
-    Just jwt' -> do
-      u <- newUniqueId
-      trigger (u, Client { connection = conn, jwt = jwt' })
-    _ -> sendClose conn (pack "bye")
+authenticateOrClose
+  :: ((UniqueId, Client) -> IO ()) -> PendingConnection -> IO ()
+authenticateOrClose trigger pendingConn = do
+  conn <- acceptRequest pendingConn
+  u    <- newUniqueId
+  let mjwt = do
+        cookieText <- orelse "Missing cookies"
+          $ lookup "Cookie" (requestHeaders $ pendingRequest pendingConn)
+        sessionCookie <- orelse "Missing session cookie"
+          $ lookup "_SESSION" (parseCookies cookieText)
+        orelse "Invalid JWT"
+          $ decodeAndVerifySignature _SECRET (decodeUtf8 sessionCookie)
+  sendTextData conn . encode $ either NoLogin (const LoggedIn) mjwt
+  trigger (u, Client { connection = conn, jwt = mjwt ^? _Right })
+  where orelse s = maybe (Left s) Right
 
 _SECRET :: Secret
 _SECRET = binarySecret $(embedFile "session_key.bin")
